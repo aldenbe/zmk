@@ -8,7 +8,6 @@
 #pragma once
 
 #include <dt-bindings/zmk/mouse.h>
-#include <zephyr.h>
 #include <zmk/event_manager.h>
 #include <zmk/mouse.h>
 

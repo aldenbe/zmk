@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <zephyr/kernel.h>
 #include <zmk/event_manager.h>
 
 #define ZMK_POSITION_STATE_CHANGE_SOURCE_LOCAL UINT8_MAX

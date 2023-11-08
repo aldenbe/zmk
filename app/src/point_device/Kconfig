@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT
 
 DT_COMPAT_ZMK_KEYMAP_TRACKBALLS := zmk,keymap-trackballs
-DT_COMPAT_ZMK_KEYMAP_SLIDERS := zmk,keymap-sliders
 
 menuconfig ZMK_POINT_DEVICE
     bool "Enable support for ZMK general point device"
@@ -59,11 +58,6 @@ config ZMK_BHV_PD_DIR_TIME_WINDOW
     default 300
 
 endif # ZMK_POINT_DEVICE
-
-config ZMK_SLIDERS
-    bool
-    default $(dt_compat_enabled,$(DT_COMPAT_ZMK_KEYMAP_SLIDERS))
-  select ZMK_POINT_DEVICE
 
 config ZMK_TRACKBALLS
     bool

@@ -11,10 +11,10 @@
 #define TOINT16(val, bits) (((struct { int16_t value : bits; }){val}).value)
 
 #include <zephyr/kernel.h>
-#include <sys/byteorder.h>
+#include <zephyr/sys/byteorder.h>
 #include "pmw3610.h"
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pmw3610, CONFIG_PMW3610_LOG_LEVEL);
 
 /* Timings (in us) used in SPI communication. Since MCU should not do other tasks during wait,

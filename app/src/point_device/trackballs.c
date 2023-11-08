@@ -1,8 +1,8 @@
-#include <drivers/sensor.h>
-#include <devicetree.h>
-#include <init.h>
+#include <zephyr/drivers/sensor.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/init.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -13,7 +13,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/endpoints.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/pd_raw_event.h>
-#include <zmk/events/endpoint_selection_changed.h>
+#include <zmk/events/endpoint_changed.h>
 
 #if ZMK_KEYMAP_HAS_TRACKBALLS
 
@@ -162,24 +162,20 @@ int zmk_trackballs_endpoint_listener(const zmk_event_t *eh) {
     LOG_INF("Update polling parameters based on current endpoint");
 
     // update polling parameters
-    switch (zmk_endpoints_selected()) {
-#if IS_ENABLED(CONFIG_ZMK_USB)
-    case ZMK_ENDPOINT_USB: {
+    switch (zmk_endpoints_selected().transport) {
+    case ZMK_TRANSPORT_USB: {
         max_poll_count =
             CONFIG_ZMK_TRACKBALL_POLL_DURATION / CONFIG_ZMK_TRACKBALL_USB_POLL_INTERVAL;
         polling_interval = CONFIG_ZMK_TRACKBALL_USB_POLL_INTERVAL;
         break;
     }
-#endif /* IS_ENABLED(CONFIG_ZMK_USB) */
 
-#if IS_ENABLED(CONFIG_ZMK_BLE)
-    case ZMK_ENDPOINT_BLE: {
+    case ZMK_TRANSPORT_BLE: {
         max_poll_count =
             CONFIG_ZMK_TRACKBALL_POLL_DURATION / CONFIG_ZMK_TRACKBALL_BLE_POLL_INTERVAL;
         polling_interval = CONFIG_ZMK_TRACKBALL_BLE_POLL_INTERVAL;
         break;
     }
-#endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
     default:
         LOG_ERR("Unsupported endpoint");
     }
@@ -242,6 +238,6 @@ static int zmk_trackballs_init(const struct device *_arg) {
 SYS_INIT(zmk_trackballs_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
 ZMK_LISTENER(zmk_trackballs, zmk_trackballs_endpoint_listener)
-ZMK_SUBSCRIPTION(zmk_trackballs, zmk_endpoint_selection_changed)
+ZMK_SUBSCRIPTION(zmk_trackballs, zmk_endpoint_changed)
 
 #endif

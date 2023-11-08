@@ -7,9 +7,9 @@
 #define DT_DRV_COMPAT zmk_behavior_point_device_directional
 
 #include <stdlib.h>
-#include <device.h>
+#include <zephyr/device.h>
 #include <drivers/behavior.h>
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 
 #include <zmk/event_manager.h>
 #include <zmk/events/keycode_state_changed.h>
