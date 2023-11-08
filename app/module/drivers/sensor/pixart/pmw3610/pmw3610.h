@@ -14,7 +14,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  enum pmw3610_attribute {
+enum pmw3610_attribute {
     /** Sensor CPI for both X and Y axes. */
     PMW3610_ATTR_CPI = SENSOR_ATTR_PRIV_START,
 
@@ -35,7 +35,7 @@ extern "C" {
 
     /** Sampling frequency time during REST3 mode [ms]. */
     PMW3610_ATTR_REST3_SAMPLE_TIME,
-  };
+};
 
 #ifdef __cplusplus
 }
