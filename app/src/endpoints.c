@@ -116,9 +116,7 @@ int zmk_endpoints_toggle_transport(void) {
     return zmk_endpoints_select_transport(new_transport);
 }
 
-struct zmk_endpoint_instance zmk_endpoints_selected(void) {
-    return current_instance;
-}
+struct zmk_endpoint_instance zmk_endpoints_selected(void) { return current_instance; }
 
 static int send_keyboard_report(void) {
     struct zmk_hid_keyboard_report *keyboard_report = zmk_hid_get_keyboard_report();
@@ -137,6 +135,39 @@ static int send_keyboard_report(void) {
 #if IS_ENABLED(CONFIG_ZMK_BLE)
     case ZMK_TRANSPORT_BLE: {
         int err = zmk_hog_send_keyboard_report(&keyboard_report->body);
+        if (err) {
+            LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
+        }
+        return err;
+    }
+#endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
+    }
+
+    LOG_ERR("Unsupported endpoint transport %d", current_instance.transport);
+    return -ENOTSUP;
+}
+
+int zmk_endpoints_send_mouse_report() {
+    struct zmk_hid_mouse_report *mouse_report = zmk_hid_get_mouse_report();
+
+    switch (current_instance.transport) {
+#if IS_ENABLED(CONFIG_ZMK_USB)
+    case ZMK_TRANSPORT_USB: {
+        int err = zmk_usb_hid_send_report((uint8_t *)mouse_report, sizeof(*mouse_report));
+        if (err) {
+            LOG_ERR("FAILED TO SEND OVER USB: %d", err);
+        }
+        return err;
+    }
+#endif /* IS_ENABLED(CONFIG_ZMK_USB) */
+
+#if IS_ENABLED(CONFIG_ZMK_BLE)
+    case ZMK_TRANSPORT_BLE: {
+#if defined(CONFIG_ZMK_MOUSE_WORK_QUEUE_DEDICATED) || defined(CONFIG_ZMK_PD_SEND_THREAD_DEDICATED)
+        int err = zmk_hog_send_mouse_report_direct(&mouse_report->body);
+#else
+        int err = zmk_hog_send_mouse_report(&mouse_report->body);
+#endif
         if (err) {
             LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
         }
@@ -297,6 +328,7 @@ static int zmk_endpoints_init(const struct device *_arg) {
 static void disconnect_current_endpoint() {
     zmk_hid_keyboard_clear();
     zmk_hid_consumer_clear();
+    zmk_hid_mouse_clear();
 
     zmk_endpoints_send_report(HID_USAGE_KEY);
     zmk_endpoints_send_report(HID_USAGE_CONSUMER);
