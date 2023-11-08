@@ -6,7 +6,7 @@
 
 #define DT_DRV_COMPAT pixart_paw3395
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <sys/byteorder.h>
 #include "paw3395.h"
 

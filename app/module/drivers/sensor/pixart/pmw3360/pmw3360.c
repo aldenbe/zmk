@@ -6,7 +6,7 @@
 
 #define DT_DRV_COMPAT pixart_pmw3360
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <sys/byteorder.h>
 #include "pmw3360.h"
 

@@ -10,7 +10,7 @@
 // adapted from https://stackoverflow.com/questions/70802306/convert-a-12-bit-signed-number-in-c
 #define TOINT16(val, bits) (((struct { int16_t value : bits; }){val}).value)
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <sys/byteorder.h>
 #include "pmw3610.h"
 

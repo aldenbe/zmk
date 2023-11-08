@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <zmk/point_device.h>
 
 #if IS_ENABLED(CONFIG_ZMK_PD_WORK_QUEUE_DEDICATED)
